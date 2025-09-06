@@ -1,11 +1,14 @@
 import streamlit as st
 import os
+import getpass
 import time
 import ollama
 from langchain_groq import ChatGroq
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.embeddings import OllamaEmbeddings
 from langchain_ollama import OllamaEmbeddings
+from langchain_openai import OpenAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -16,11 +19,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-## LOADING GROP API KEY FROM ENV VARIABLE   
+## LOADING GROQ API KEY FROM ENV VARIABLE   
 groq_api_key=os.environ['GROQ_API_KEY']
-ollama_host = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+
+if not os.getenv("GOOGLE_API_KEY"):
+    os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter your Google API key: ")
+
+import time
+
+
 if "vector" not in st.session_state:
-    st.session_state.embeddings = OllamaEmbeddings(model="nomic-embed-text")
+    st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001",transport="grpc")
     st.session_state.loader = WebBaseLoader("https://jmi.ac.in/")
     st.session_state.docs = st.session_state.loader.load()
     st.session_state.text_splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=100)
@@ -39,7 +48,7 @@ if "vector" not in st.session_state:
 
 
     # Split the pages into smaller chunks
-    st.session_state.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    st.session_state.text_splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=100)
     st.session_state.pdf = st.session_state.text_splitter.split_documents(st.session_state.pages)
 
     
@@ -48,7 +57,7 @@ if "vector" not in st.session_state:
     
 
 st.title("Language Agnostic ChatBot")
-llm=ChatGroq(api_key=groq_api_key, model="openai/gpt-oss-20b")  
+llm=ChatGroq(api_key=groq_api_key, model="openai/gpt-oss-120b")  
 
 ##PROMPT TEMPLATE
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
