@@ -18,7 +18,7 @@ load_dotenv()
 
 ## LOADING GROP API KEY FROM ENV VARIABLE   
 groq_api_key=os.environ['GROQ_API_KEY']
-
+ollama_host = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 if "vector" not in st.session_state:
     st.session_state.embeddings = OllamaEmbeddings(model="nomic-embed-text")
     st.session_state.loader = WebBaseLoader("https://jmi.ac.in/")
