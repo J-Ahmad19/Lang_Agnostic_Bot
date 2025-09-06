@@ -2,8 +2,6 @@ streamlit
 langchain
 requests
 beautifulsoup4
-langchain-openai
-langchain_openai
 langchain_core
 python-dotenv
 langchain_community
@@ -15,11 +13,8 @@ beautifulsoup4
 pypdf
 chromadb
 langchain_groq
-langchain_ollama
 faiss-cpu
 groq
-ollama
 openai
-langchain_openai
 langchain-google-genai
 
