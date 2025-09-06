@@ -19,3 +19,7 @@ langchain_ollama
 faiss-cpu
 groq
 ollama
+openai
+langchain_openai
+langchain-google-genai
+
